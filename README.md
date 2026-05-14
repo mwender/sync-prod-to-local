@@ -1,8 +1,14 @@
 # sync-prod-to-local
 
-A bash script for syncing a remote WordPress database to a local database setup via Laravel Valet. This setup assumes your site is built with the Roots Bedrock framework.
+A bash script for syncing a remote WordPress database to a local database. This setup assumes your site is built with the Roots Bedrock framework.
 
-## 
+## Setup and Usage
+
+1. Add this script to your project. I typically place it within a `bin/` directory I create from the root of my Bedrock setup.
+2. Add the below environment variables to your `.env`. Replace the `{$variable_name}` patterns with your configuration.
+3. Call the script from the root of your locally hosted Bedrock site.
+
+## Environment Variables
 
 Add these constants to your `.env`:
 
