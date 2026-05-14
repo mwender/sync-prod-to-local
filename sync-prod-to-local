@@ -2,7 +2,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+
+# Walk up from script location until we find .env — works at any depth inside bin/
+PROJECT_ROOT="$SCRIPT_DIR"
+while [[ "$PROJECT_ROOT" != "/" && ! -f "$PROJECT_ROOT/.env" ]]; do
+  PROJECT_ROOT="$(cd -- "$PROJECT_ROOT/.." && pwd)"
+done
 
 #ENV_FILE="$PROJECT_ROOT/.env"
 #if [[ -f "$ENV_FILE" ]]; then
@@ -129,8 +134,8 @@ echo "👉 [WP DB] Replacing https://$SYNC_REMOTE_HOST with https://$SYNC_LOCAL_
 run bash -lc "cd \"$WEB_DIR\" && wp search-replace \"https://$SYNC_REMOTE_HOST\" \"https://$SYNC_LOCAL_HOST\" --skip-columns=guid --format=count"
 
 # Optional per-project steps:
-# Create bin/sync.d/post-import.sh to run Elementor fixes, plugin toggles, etc.
-POST_IMPORT_HOOK="$PROJECT_ROOT/bin/sync.d/post-import.sh"
+# Create sync.d/post-import.sh alongside this script to run Elementor fixes, plugin toggles, etc.
+POST_IMPORT_HOOK="$SCRIPT_DIR/sync.d/post-import.sh"
 
 if [[ -f "$POST_IMPORT_HOOK" ]]; then
   echo "---"
